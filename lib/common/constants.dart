@@ -33,6 +33,11 @@ class NASAPowerParameters{
   static const String WIND_SPEED_AT_2_METERS_MAXIMUM_AVERAGE = "WS2M_MAX_AVG";
   static const String WIND_SPEED_AT_2_METERS_MINIMUM = "WS2M_MIN";
   static const String WIND_SPEED_AT_2_METERS_MINIMUM_AVERAGE = "WS2M_MIN_AVG";
+  static const String EARTH_SKIN_TEMPERATURE_MAXIMUM = "TS_MAX";
+  static const String EARTH_SKIN_TEMPERATURE_MINIMUM = "TS_MIN";
+  static const String EARTH_SKIN_TEMPERATURE_MAXIMUM_AVERAGE = "TS_MAX_AVG";
+  static const String EARTH_SKIN_TEMPERATURE_MINIMUM_AVERAGE = "TS_MIN_AVG";
+  static const String SNOW_DEPTH = "SNODP";
 }
 
 class NASAPowerCommunities{
@@ -48,10 +53,6 @@ class NASAPowerServices{
   static const HOURLY = "hourly";
 }
 
-class Location {
-  final double longitude;
-  final double latitude;
-  const Location(this.latitude,this.longitude);
-}
+enum StatisticsPeriod{monthly, yearly}
 
 

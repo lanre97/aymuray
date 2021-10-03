@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:space_farm/common/constants.dart';
 import 'package:space_farm/data/entities/nasa_power_response.dart';
 import 'package:space_farm/data/repositories/nasa_power_repository.dart';
-import 'package:space_farm/presentation/pages/home/home.dart';
+
+import 'common/utils.dart';
 
 void main() {
   runApp(MyApp());
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: HomeScreen(),
+      home: MyHomePage(title: 'Hola mundo'),
     );
   }
 }
@@ -31,7 +32,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
+ 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,13 +41,12 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: FutureBuilder<NasaPowerResponse>(
         future: NASAPowerRepositoryImplementation().getData(
-          NASAPowerServices.DAILY, 
           [
-            NASAPowerParameters.REALATIVE_HUMIDITY_AT_2_METERS,
-            NASAPowerParameters.TEMPERATURE_AT_2_METERS
+            NASAPowerParameters.ROOT_ZONE_SOIL_WETNESS,
+            NASAPowerParameters.GLOBAL_ILLUMINANCE
           ], 
           NASAPowerCommunities.AGROCLIMATOLOGY, 
-          Location(-6.487490, -76.363251), 
+          Location(-15.018368730360278, -73.78063749521971), 
           DateTime(2015), 
           DateTime(2018)
         ),
