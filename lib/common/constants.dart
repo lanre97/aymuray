@@ -1,4 +1,4 @@
-class NASAPowerParameters{
+class NASAPowerParameters {
   static const String CLEAR_SKY_DAYS = "CLRSKY_DAYS";
   static const String CLOUD_AMOUNT = "CLOUD_AMT";
   static const String CLOUD_AMOUNT_AT_DAYTIME = "CLOUD_AMT_DAY";
@@ -20,6 +20,7 @@ class NASAPowerParameters{
   static const String PRECIPITATION_CORRECTED = "PRECTOTCORR";
   static const String REALATIVE_HUMIDITY_AT_2_METERS = "RH2M";
   static const String ROOT_ZONE_SOIL_WETNESS = "GWETROOT";
+  static const String SNOW_DEPTH = "SNODP";
   static const String SPECIFIC_HUMIDITY_AT_2_METERS = "QV2M";
   static const String SURFACE_AIR_DENSITY = "RHOA";
   static const String TEMPERATURE_AT_2_METERS = "T2M";
@@ -37,22 +38,19 @@ class NASAPowerParameters{
   static const String EARTH_SKIN_TEMPERATURE_MINIMUM = "TS_MIN";
   static const String EARTH_SKIN_TEMPERATURE_MAXIMUM_AVERAGE = "TS_MAX_AVG";
   static const String EARTH_SKIN_TEMPERATURE_MINIMUM_AVERAGE = "TS_MIN_AVG";
-  static const String SNOW_DEPTH = "SNODP";
 }
 
-class NASAPowerCommunities{
+class NASAPowerCommunities {
   static const String AGROCLIMATOLOGY = "AG";
   static const String RENEWABLE_ENERGY = "RE";
   static const String SUSTAINABLE_BUILDINGS = "SB";
 }
 
-class NASAPowerServices{
+class NASAPowerServices {
   static const CLIMATOLOGY = "climatology";
   static const MONTHLY = "monthly";
   static const DAILY = "daily";
   static const HOURLY = "hourly";
 }
 
-enum StatisticsPeriod{monthly, yearly}
-
-
+enum StatisticsPeriod { monthly, yearly }
