@@ -7,20 +7,13 @@ import 'package:space_farm/data/entities/nasa_power_response.dart';
 import 'package:http/http.dart' as http;
 
 abstract class NASAPowerRepository{
-  Future<NasaPowerResponse> getData(
-    List<String> parameters, 
-    String community, 
-    Location location, 
-    DateTime startDate, 
-    DateTime endDate
-  );
+  Future<NasaPowerResponse> getEnvironmentData(Location location);
 }
 
 class NASAPowerRepositoryImplementation implements NASAPowerRepository{
 
   static const String _baseURL = 'https://power.larc.nasa.gov/api/temporal';
 
-  @override
   Future<NasaPowerResponse> getData(
       List<String> parameters, 
       String community, Location location, DateTime startDate, 
@@ -42,4 +35,22 @@ class NASAPowerRepositoryImplementation implements NASAPowerRepository{
 
   }
 
+  @override
+  Future<NasaPowerResponse> getEnvironmentData(Location location) {
+    return getData(
+      [
+        NASAPowerParameters.GLOBAL_ILLUMINANCE,
+        NASAPowerParameters.TEMPERATURE_AT_2_METERS,
+        NASAPowerParameters.TEMPERATURE_AT_2_METERS_MAXIMUM,
+        NASAPowerParameters.TEMPERATURE_AT_2_METERS_MINIMUM,
+        NASAPowerParameters.SNOW_DEPTH,
+        NASAPowerParameters.WIND_SPEED_AT_2_METERS,
+        NASAPowerParameters.ROOT_ZONE_SOIL_WETNESS
+      ],
+      NASAPowerCommunities.AGROCLIMATOLOGY,
+      Location(location.latitude, location.longitude), //16% a 37%
+      DateTime.now().subtract(Duration(days: 3650)),
+      DateTime.now().subtract(Duration(days: 366))
+    );
+  }
 }

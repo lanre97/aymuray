@@ -17,8 +17,17 @@ class Vegetable{
     required this.environment
   });
 
+  factory Vegetable.fromJson(Map<String,dynamic> json)=>Vegetable(
+    name: json['name'], 
+    description: json['description'],
+    vitamins: json['vitamins'],
+    minerals: json['minerals'],
+    image: json['image'],
+    icon: json['icon'],
+    environment: json['environment']
+  );
+
 }
-  
 
 class VegetableEnvironment{
   final double? optimalTopTemperature;
@@ -32,10 +41,30 @@ class VegetableEnvironment{
   final double? minimumLuminosity;
   final double? maximumPrecipitation;
   final double? minimumPrecipitation;
-  final double? optimalHumidity;
+  final double? optimalSoilWetness;
   final double? harvestTime;
+  final double? maximumSnowDeep;
+
+  bool get canCalcTempImportance =>
+    optimalTopTemperature != null &&
+    optimalLowerTemperature != null &&
+    topTemperatureLimit != null &&
+    lowerTemperatureLimit != null;
+
+  bool get canCalcTempVaritionImportance => temperatureVariation != null;
+
+  bool get canCalcWindSpeedImportance => maximumWindSpeed != null;
+
+  bool get canCalcLuminicenceImportance =>
+      maximumLuminosity != null && minimumLuminosity != null;
+
+  bool get canCalcSoilWetnessImportance => optimalSoilWetness != null;
+
+  bool get canCalcTempPenalty =>
+      canCalcTempImportance && canCalcTempVaritionImportance;
 
   const VegetableEnvironment({
+    this.maximumSnowDeep,
     this.optimalTopTemperature,
     this.optimalLowerTemperature,
     this.topTemperatureLimit,
@@ -47,7 +76,25 @@ class VegetableEnvironment{
     this.minimumLuminosity,
     this.maximumPrecipitation,
     this.minimumPrecipitation,
-    this.optimalHumidity,
+    this.optimalSoilWetness,
     this.harvestTime
   });
+
+  factory VegetableEnvironment.fromJson(Map<String, dynamic> json)=>
+    VegetableEnvironment(
+      maximumSnowDeep:json['maximumSnowDeep'],
+      optimalTopTemperature: json['optimalTopTemperature'],
+      optimalLowerTemperature: json['optimalLowerTemperature'],
+      topTemperatureLimit: json['topTemperatureLimit'],
+      lowerTemperatureLimit: json['lowerTemperatureLimit'],
+      temperatureVariation: json['temperatureVariation'],
+      maximumWindSpeed: json['maximumWindSpeed'],
+      optimalHeight: json['optimalHeight'],
+      maximumLuminosity: json['maximumLuminosity'],
+      minimumLuminosity: json['minimumLuminosity'],
+      maximumPrecipitation: json['maximumPrecipitation'],
+      minimumPrecipitation: json['minimumPrecipitation'],
+      optimalSoilWetness: json['optimalSoilWetness'],
+      harvestTime: json['harvestTime']
+    );
 }

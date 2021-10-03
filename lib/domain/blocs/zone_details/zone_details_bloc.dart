@@ -1,8 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:space_farm/common/constants.dart';
 import 'package:space_farm/common/utils.dart';
-import 'package:space_farm/data/interactors/zone_details/zone_details_interactor.dart';
 import 'package:space_farm/domain/blocs/zone_details/zone_details_state.dart';
+import 'package:space_farm/domain/interactors/zone_details/zone_details_interactor.dart';
 
 class ZoneDetailsBloc extends Cubit<ZoneDetailsState>{
 
@@ -21,6 +21,7 @@ class ZoneDetailsBloc extends Cubit<ZoneDetailsState>{
 
       emit(ZoneDetailsState.loaded(
         details,
+        location,
         humidity: humidity, 
         bestSeasonsToSow: bestSeasonsToSow
       ));
@@ -31,16 +32,16 @@ class ZoneDetailsBloc extends Cubit<ZoneDetailsState>{
     }
   }
 
-  updateHumidity(Location location, StatisticsPeriod period){
+  updateHumidity(StatisticsPeriod period){
     emit(state.copyWith(isSubmiting: true));
-    interactor.getHumidity(location, period)
+    interactor.getHumidity(state.location!, period)
     .then((value) => state.copyWith(humidity: value, error: null))
     .catchError((error) => state.copyWith(error: error.message));
   }
 
-  updateBestSeasonToSow(Location location, StatisticsPeriod period){
+  updateBestSeasonToSow(StatisticsPeriod period){
     emit(state.copyWith(isSubmiting: true));
-    interactor.getBestSeasonToSow(location, period)
+    interactor.getBestSeasonToSow(state.location!, period)
     .then((value) => state.copyWith(bestSeasonsToSow: value, error: null))
     .catchError((error) => state.copyWith(error: error.message));
   }
