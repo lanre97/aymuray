@@ -14,19 +14,16 @@ class VegetableBloc extends Cubit<VegetableState>{
   initialize(Vegetable vegetable, Location location)async{
     emit(VegetableState.submiting(vegetable: vegetable, location: location));
     try{
-      final climateQuality = 
-        await interactor.getClimateQuality(location, vegetable.environment, StatisticsPeriod.yearly);
+      final bestMonths = 
+        await interactor.getBestMonths(location, vegetable.environment);
       final bestSeasonsToSow = 
         await interactor.getBestSeasonToSow(location, vegetable.environment, StatisticsPeriod.yearly);
-      final bestMonths = 
-        await interactor.getBestMonths(location, vegetable.environment, StatisticsPeriod.yearly);
 
       emit(VegetableState.loaded(
         vegetable, 
         location,
-        climateQuality: climateQuality, 
-        bestSeasonsToSow: bestSeasonsToSow, 
-        bestMonths: bestMonths
+        bestMonths: bestMonths, 
+        bestSeasonsToSow: bestSeasonsToSow
       ));
 
     }catch(error){
@@ -37,7 +34,7 @@ class VegetableBloc extends Cubit<VegetableState>{
 
   updateClimateQuality(StatisticsPeriod period){
     emit(state.copyWith(isSubmiting: true));
-    interactor.getClimateQuality(state.location!,state.vegetable!.environment, period)
+    interactor.getBestMonths(state.location!,state.vegetable!.environment)
     .then((value) => state.copyWith(climateQuality: value, error: null))
     .catchError((error) => state.copyWith(error: error.message));
   }
@@ -48,13 +45,5 @@ class VegetableBloc extends Cubit<VegetableState>{
     .then((value) => state.copyWith(bestSeasonsToSow: value, error: null))
     .catchError((error) => state.copyWith(error: error.message));
   }
-
-  updateBestMonths(StatisticsPeriod period){
-    emit(state.copyWith(isSubmiting: true));
-    interactor.getBestMonths(state.location!,state.vegetable!.environment, period)
-    .then((value) => state.copyWith(bestMonths: value, error: null))
-    .catchError((error) => state.copyWith(error: error.message));
-  }
-
 
 }

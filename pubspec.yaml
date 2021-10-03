@@ -19,6 +19,9 @@ dependencies:
   geolocator: ^7.6.2
   location: ^4.3.0
   syncfusion_flutter_charts: ^19.3.43
+  geocoding: ^2.0.1
+  firebase_core: ^1.7.0
+  cloud_firestore: ^2.5.3
 
 dev_dependencies:
   flutter_test:

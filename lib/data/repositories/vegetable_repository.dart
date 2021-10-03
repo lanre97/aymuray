@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:space_farm/data/entities/vegetable.dart';
 
 abstract class VegetableRepository{
@@ -5,9 +6,11 @@ abstract class VegetableRepository{
 }
 
 class VegetableRepositoryImplementation implements VegetableRepository{
+  
   @override
-  Future<List<Vegetable>> getAll() {
-    throw UnimplementedError();
+  Future<List<Vegetable>> getAll() async {
+    final response = await FirebaseFirestore.instance.collection('vegetables').get();
+    return response.docs.map((e) => Vegetable.fromJson(e.data())).toList();
   }
 
 }
