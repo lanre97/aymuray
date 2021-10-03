@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:space_farm/common/constants.dart';
 import 'package:space_farm/data/entities/nasa_power_response.dart';
 import 'package:space_farm/data/repositories/nasa_power_repository.dart';
@@ -32,13 +31,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +75,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
           return ListView(
             children: [
-              Text("Location(${data?.geometry?.coordinates?[1]??""},${data?.geometry.coordinates?[0]??""})"),
+              Text("Location(${data?.geometry.coordinates?[1]??""},${data?.geometry.coordinates?[0]??""})"),
               Text(data?.parameters[NASAPowerParameters.REALATIVE_HUMIDITY_AT_2_METERS]?.longname??""),
               properties?[NASAPowerParameters.REALATIVE_HUMIDITY_AT_2_METERS]??Container(),
               Text(data?.parameters[NASAPowerParameters.TEMPERATURE_AT_2_METERS]?.longname??""),
