@@ -14,6 +14,7 @@ class NasaPowerResponse{
     .cast<String,NasaPowerResponseParameter>()
   );
 
+
 }
 
 class NasaPowerResponseGeometry{
