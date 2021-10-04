@@ -2,54 +2,60 @@ import 'dart:math';
 
 import 'package:space_farm/common/constants.dart';
 import 'package:space_farm/data/entities/nasa_power_response.dart';
-import 'package:space_farm/common/extensions.dart';
 import 'package:space_farm/data/entities/vegetable.dart';
 import 'environment.dart';
 
-class EnvironmentAnalyzer{
+class EnvironmentAnalyzer {
   List<Environment> environments;
 
   EnvironmentAnalyzer({required NasaPowerResponse response})
-  :environments = _getEnvironments(response);
+      : environments = _getEnvironments(response);
 
-  static List<Environment>_getEnvironments(NasaPowerResponse response){
+  static List<Environment> _getEnvironments(NasaPowerResponse response) {
+    final dates = response
+        .data[NASAPowerParameters.TEMPERATURE_AT_2_METERS]?.keys
+        .toList();
 
-    final dates = response.data[NASAPowerParameters.TEMPERATURE_AT_2_METERS]?.keys.toList();
-
-    if(dates == null){
+    if (dates == null) {
       return <Environment>[];
     }
 
-    return dates.map((e){
-      final  dateTime = e.toDateTime(pattern: 'yyyyMM');
+    return dates.map((e) {
+      DateTime dateTime = getDateTimeFromString(e);
       return Environment(
-        year: dateTime.year, 
-        month: dateTime.month,
-        luminescence: response.data[NASAPowerParameters.GLOBAL_ILLUMINANCE]?[e],
-        temperatureAt2Meters: response.data[NASAPowerParameters.TEMPERATURE_AT_2_METERS]?[e],
-        maxTemperatureAt2Meters: response.data[NASAPowerParameters.TEMPERATURE_AT_2_METERS_MAXIMUM]?[e],
-        minTemperatureAt2Meters: response.data[NASAPowerParameters.TEMPERATURE_AT_2_METERS_MINIMUM]?[e],
-        snowDeep: response.data[NASAPowerParameters.SNOW_DEPTH]?[e],
-        windSpeed: response.data[NASAPowerParameters.WIND_SPEED_AT_2_METERS]?[e],
-        soilWetness: response.data[NASAPowerParameters.ROOT_ZONE_SOIL_WETNESS]?[e]
-      );
+          year: dateTime.year,
+          month: dateTime.month,
+          luminescence: response.data[NASAPowerParameters.GLOBAL_ILLUMINANCE]
+              ?[e],
+          temperatureAt2Meters:
+              response.data[NASAPowerParameters.TEMPERATURE_AT_2_METERS]?[e],
+          maxTemperatureAt2Meters: response
+              .data[NASAPowerParameters.TEMPERATURE_AT_2_METERS_MAXIMUM]?[e],
+          minTemperatureAt2Meters: response
+              .data[NASAPowerParameters.TEMPERATURE_AT_2_METERS_MINIMUM]?[e],
+          snowDeep: response.data[NASAPowerParameters.SNOW_DEPTH]?[e],
+          windSpeed: response.data[NASAPowerParameters.WIND_SPEED_AT_2_METERS]
+              ?[e],
+          soilWetness: response.data[NASAPowerParameters.ROOT_ZONE_SOIL_WETNESS]
+              ?[e]);
     }).toList();
-
   }
 
-  getEnvironmentsInMonths(){
-    final environments = [...this.environments]..removeWhere((element) => element.month! > 12);
-    return environments.where((element) => element.year == environments.last.year);
+  getEnvironmentsInMonths() {
+    final environments = [...this.environments]
+      ..removeWhere((element) => element.month! > 12);
+    return environments
+        .where((element) => element.year == environments.last.year);
   }
 
-  getEnvironmentsInYears(){
+  getEnvironmentsInYears() {
     var currentYear = environments[0].year;
     final currentList = <Environment>[];
     final finalList = <Environment>[];
 
-    for(int i = 0; i<environments.length; i++){
+    for (int i = 0; i < environments.length; i++) {
       final currentEnvironment = environments[i];
-      if(currentEnvironment.year != currentYear){
+      if (currentEnvironment.year != currentYear) {
         finalList.add(_getEnviromentAverage(currentList));
         currentList.clear();
         currentYear = currentEnvironment.year;
@@ -61,8 +67,9 @@ class EnvironmentAnalyzer{
   }
 
   List<Environment> predictOneYearEnviroments() {
-    return List<int>.generate(12, (i) => i+1).map((month){
-      return _getEnviromentAverage(environments.where((e) => e.month == month).toList());
+    return List<int>.generate(12, (i) => i + 1).map((month) {
+      return _getEnviromentAverage(
+          environments.where((e) => e.month == month).toList());
     }).toList();
   }
 
@@ -90,19 +97,19 @@ class EnvironmentAnalyzer{
     });
 
     return Environment(
-      year: environments[0].year,
-      luminescence: luminescence / length,
-      temperatureAt2Meters: temperatureAt2Meters / length,
-      maxTemperatureAt2Meters: maxTemperatureAt2Meters / length,
-      minTemperatureAt2Meters: minTemperatureAt2Meters / length,
-      precipitation: precipitation / length,
-      snowDeep: snowDeep / length,
-      soilWetness: soilWetness / length,
-      windSpeed: windSpeed / length);
+        year: environments[0].year,
+        luminescence: luminescence / length,
+        temperatureAt2Meters: temperatureAt2Meters / length,
+        maxTemperatureAt2Meters: maxTemperatureAt2Meters / length,
+        minTemperatureAt2Meters: minTemperatureAt2Meters / length,
+        precipitation: precipitation / length,
+        snowDeep: snowDeep / length,
+        soilWetness: soilWetness / length,
+        windSpeed: windSpeed / length);
   }
 
   static double? _calculateTemperatureImportance(
-    Environment env, VegetableEnvironment crop) {
+      Environment env, VegetableEnvironment crop) {
     double? temperatureImportance;
     if (crop.canCalcTempImportance && env.canCalcTempImportance) {
       if (env.temperatureAt2Meters! >= crop.topTemperatureLimit! ||
@@ -131,7 +138,8 @@ class EnvironmentAnalyzer{
       Environment env, VegetableEnvironment crop) {
     double? temperatureVaritionImportance;
 
-    if (env.canCalcTempVaritionImportance && crop.canCalcTempVaritionImportance) {
+    if (env.canCalcTempVaritionImportance &&
+        crop.canCalcTempVaritionImportance) {
       double envVarition =
           env.maxTemperatureAt2Meters! - env.minTemperatureAt2Meters!;
 
@@ -146,7 +154,8 @@ class EnvironmentAnalyzer{
     return temperatureVaritionImportance;
   }
 
-  static double _calculateTemperaturePenalty(Environment env, VegetableEnvironment crop) {
+  static double _calculateTemperaturePenalty(
+      Environment env, VegetableEnvironment crop) {
     double penalty = 1; // penalty goes from 0 to 1
     // 0 is high penalty and 1 is low
     double difference = 0;
@@ -218,21 +227,24 @@ class EnvironmentAnalyzer{
     return soilWetnessImportance;
   }
 
-  static double _calculateSnowDeepImportance(Environment env, VegetableEnvironment crop) {
+  static double _calculateSnowDeepImportance(
+      Environment env, VegetableEnvironment crop) {
     double snowDeepImportance;
     if (env.snowDeep < 0.2) {
       snowDeepImportance = 1;
-    } else if (crop.maximumSnowDeep == 0 || env.snowDeep > crop.maximumSnowDeep!) {
+    } else if (crop.maximumSnowDeep == 0 ||
+        env.snowDeep > (crop.maximumSnowDeep ?? 0.2)) {
       snowDeepImportance = 0;
     } else {
-      snowDeepImportance =
-          (crop.maximumSnowDeep! - env.snowDeep) / crop.maximumSnowDeep!;
+      snowDeepImportance = ((crop.maximumSnowDeep ?? 0.2) - env.snowDeep) /
+          (crop.maximumSnowDeep ?? 0.2);
     }
 
     return snowDeepImportance;
   }
 
-  static double calculateSuccessProbability(Environment env, VegetableEnvironment crop) {
+  static double calculateSuccessProbability(
+      Environment env, VegetableEnvironment crop) {
     double tempPenalty = _calculateTemperaturePenalty(env, crop);
 
     double temp = _calculateTemperatureImportance(env, crop) ?? 1;
@@ -246,5 +258,19 @@ class EnvironmentAnalyzer{
 
     return sqrt(snow) * sqrt(globalTemp) * sqrt(wind) * sqrt(lum) * sqrt(wet);
   }
+}
 
+DateTime getDateTimeFromString(String e) {
+  String year = e.substring(0, 4);
+  String month = e.substring(4, 6);
+  int intYear = 2020;
+  int intMonth = 0;
+  if (int.tryParse(year) != null) {
+    intYear = int.parse(year);
+  }
+  if (int.tryParse(month) != null) {
+    intMonth = int.parse(month);
+  }
+
+  return DateTime(intYear, intMonth);
 }

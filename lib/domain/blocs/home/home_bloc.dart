@@ -37,7 +37,8 @@ class HomeBloc extends Cubit<HomeState>{
       vegetables: state.vegetables,
       selectedLocation: location,
       selectedVegetable: state.selectedVegetable,
-      mapController: state.mapController
+      mapController: state.mapController,
+      mapType: state.mapType ?? MapType.normal
     ));
   }
 

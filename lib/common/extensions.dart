@@ -7,7 +7,7 @@ extension FormatDate on DateTime {
   }
 }
 
-extension StringToDate on String{
+/*extension StringToDate on String{
   DateTime toDateTime({String? pattern}){
     final DateFormat formatter = DateFormat(pattern);
     if(pattern==null){
@@ -15,4 +15,4 @@ extension StringToDate on String{
     }
     return formatter.parse(this);
   }
-}
+}*/
