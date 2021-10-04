@@ -1,6 +1,6 @@
 # space_farm
 
-Aplicacion para el NASA space apps challenge
+Consider the branch and google_maps as functional branches (it has an example of how graphics work)
 
 ## Getting Started
 
