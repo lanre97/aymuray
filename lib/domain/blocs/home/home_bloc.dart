@@ -60,4 +60,9 @@ class HomeBloc extends Cubit<HomeState>{
     emit(state.copyWith(mapType: mapType));
   }
 
+  getInitialCameraPosition(){
+    return CameraPosition(
+      target: LatLng(-9.755568349600692, -75.67805076058177), zoom: 1, tilt: 20);
+  }
+
 }
