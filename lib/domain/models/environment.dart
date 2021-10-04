@@ -10,6 +10,8 @@ class Environment {
   final double snowDeep;
   final double precipitation;
 
+  
+
   bool get canCalcTempImportance => (temperatureAt2Meters ?? -999) >= -273;
 
   bool get canCalcTempVaritionImportance =>
