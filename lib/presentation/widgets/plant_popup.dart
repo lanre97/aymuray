@@ -1,66 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:space_farm/data/entities/vegetable.dart';
 
+
 import 'button_plant.dart';
 import 'selector_crop.dart';
 
-List<Vegetable> cropData = [potato, maize, onion];
-
-Vegetable potato = Vegetable(
-  name: "POTATO",
-  vitamins: ["C", "B1", "B3", "B6"],
-  minerals: [
-    "Pantothenic Acid",
-    "Potassium",
-    "Phosphorus",
-    "Magnesium",
-    "Riboflavine",
-    "Folate"
-  ],
-  image: 'assets/potato.png',
-  icon: '1',
-  description:
-      'The potato or potato is an edible tuber that is extracted from the American herbaceous plant "Solanum tuberosum", of Andean origin.',
-  environment: VegetableEnvironment()
-);
-
-Vegetable maize = Vegetable(
-  name: "POTATO",
-  vitamins: ["C", "B1", "B3", "B6"],
-  minerals: [
-    "Pantothenic Acid",
-    "Potassium",
-    "Phosphorus",
-    "Magnesium",
-    "Riboflavine",
-    "Folate"
-  ],
-  image: 'assets/potato.png',
-  icon: '1',
-  description:
-      'The potato or potato is an edible tuber that is extracted from the American herbaceous plant "Solanum tuberosum", of Andean origin.',
-  environment: VegetableEnvironment()
-);
-Vegetable onion = Vegetable(
-  name: "POTATO",
-  vitamins: ["C", "B1", "B3", "B6"],
-  minerals: [
-    "Pantothenic Acid",
-    "Potassium",
-    "Phosphorus",
-    "Magnesium",
-    "Riboflavine",
-    "Folate"
-  ],
-  image: 'assets/potato.png',
-  icon: '1',
-  description:
-      'The potato or potato is an edible tuber that is extracted from the American herbaceous plant "Solanum tuberosum", of Andean origin.',
-  environment: VegetableEnvironment()
-);
-
 class PlantPopUp extends StatefulWidget {
-  PlantPopUp({Key? key}) : super(key: key);
+  final List<Vegetable> vegetables;
+  final Vegetable selected;
+
+  final Function(Vegetable selected)? onChange;
+
+  PlantPopUp({
+    Key? key, this.onChange,
+    required this.vegetables,
+    required this.selected
+  }) : super(key: key);
 
   @override
   _PlantPopUpState createState() => _PlantPopUpState();
@@ -69,7 +24,6 @@ class PlantPopUp extends StatefulWidget {
 class _PlantPopUpState extends State<PlantPopUp> {
 
   bool open = false;
-
   @override
   Widget build(BuildContext context) {
     return AnimatedSwitcher(
@@ -79,8 +33,14 @@ class _PlantPopUpState extends State<PlantPopUp> {
               ScaleTransition(scale: animation, child: child),
       child: open? 
       SelectorCrop(
-        selected: potato,
-        vegetables: cropData,
+        selected: widget.selected,
+        vegetables: widget.vegetables,
+        onChange: widget.onChange,
+        onBack: (){
+          setState(() {
+            open = !open;
+          });
+        },
       )
       : 
       ButtonPlant(
@@ -90,7 +50,8 @@ class _PlantPopUpState extends State<PlantPopUp> {
             open = !open;
           });
         }
-      )
+      ),
+    
     );
   }
 }

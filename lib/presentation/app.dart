@@ -41,11 +41,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primaryColor: Color(0xFF559584),
         ),
-        routes:{
-          '/':(context)=>HomeScreen(),
-          //'/vegetables':(context)=>VegetableScreen(),
-          '/zone_details':(context)=>ZoneDetailsScreen()
-        }
+        home: HomeScreen(),
       ),
     );
   }

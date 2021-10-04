@@ -5,11 +5,15 @@ class SelectorCrop extends StatelessWidget {
   
   final List<Vegetable> vegetables;
   final Vegetable selected;
-  
+  final VoidCallback? onBack;
+  final Function(Vegetable selected)? onChange;
+
   const SelectorCrop({
     Key? key,
     required this.vegetables,
-    required this.selected
+    required this.selected,
+    this.onChange,
+    this.onBack,
   }) : super(key: key);
 
   @override
@@ -27,11 +31,13 @@ class SelectorCrop extends StatelessWidget {
           Flexible(
             fit: FlexFit.loose,
             flex: 1,
-            child: VegetableInfoContainer(vegetable: selected,),
+            child: VegetableInfoContainer(vegetable: selected,onBack: onBack,),
           ),
-          /*SelectionCrop(
-            indice: indice,
-          ),*/
+          SelectionCrop(
+            vegetables: vegetables,
+            selected: selected,
+            onChange: onChange,
+          ),
         ],
       ),
     );
@@ -41,8 +47,9 @@ class SelectorCrop extends StatelessWidget {
 class VegetableInfoContainer extends StatelessWidget {
 
   final Vegetable vegetable;
+  final VoidCallback? onBack;
 
-  const VegetableInfoContainer({Key? key, required this.vegetable}) : super(key: key);
+  const VegetableInfoContainer({Key? key, required this.vegetable, this.onBack}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -52,17 +59,21 @@ class VegetableInfoContainer extends StatelessWidget {
             topLeft: Radius.circular(40),
             bottomLeft: Radius.circular(40),
           )),
-      child: DescriptionCrop(vegetable: vegetable),
+      child: DescriptionCrop(vegetable: vegetable, onBack: onBack,),
     );
   }
 }
 
-/*class SelectionCrop extends StatelessWidget {
+class SelectionCrop extends StatelessWidget {
   const SelectionCrop({
     Key? key,
-    required this.indice,
+    required this.vegetables,
+    required this.selected,
+    this.onChange
   }) : super(key: key);
-  final int indice;
+  final Vegetable selected;
+  final List<Vegetable> vegetables;
+  final Function(Vegetable selected)? onChange;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -73,7 +84,9 @@ class VegetableInfoContainer extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           OptionsCrops(
-            indice: indice,
+            selected: selected,
+            vegetables: vegetables,
+            onChange: onChange,
           ),
           Flexible(
             fit: FlexFit.loose,
@@ -100,9 +113,13 @@ class VegetableInfoContainer extends StatelessWidget {
 class OptionsCrops extends StatelessWidget {
   const OptionsCrops({
     Key? key,
-    required this.indice,
+    required this.vegetables,
+    required this.selected,
+    this.onChange
   }) : super(key: key);
-  final int indice;
+  final Vegetable selected;
+  final List<Vegetable> vegetables;
+  final Function(Vegetable selected)? onChange;
   @override
   Widget build(BuildContext context) {
     double _whidthButton = 48;
@@ -124,36 +141,15 @@ class OptionsCrops extends StatelessWidget {
               Wrap(
                 direction: Axis.vertical,
                 alignment: WrapAlignment.spaceAround,
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                        // boxShadow: <BoxShadow>[
-                        //   BoxShadow(
-                        //     color: Colors.black26,
-                        //     blurRadius: 5.0,
-                        //     offset: Offset(2.0, 2.0),
-                        //   )
-                        // ],
-                        ),
-                    child: ButtonVegetable(
-                        icon: Image.asset('assets/potato_icon.png'),
-                        setVegetable: () {},
-                        marginBotom: _marginBotom,
-                        whidthButton: _whidthButton,
-                        heightButton: _heightButton),
-                  ),
-                  ButtonVegetable(
-                      icon: Image.asset('assets/maize_icon.png'),
-                      setVegetable: () {},
-                      marginBotom: _marginBotom,
-                      whidthButton: _whidthButton,
-                      heightButton: _heightButton),
-                  ButtonVegetable(
-                      icon: Image.asset('assets/onion_icon.png'),
-                      setVegetable: () {},
-                      marginBotom: _marginBotom,
-                      whidthButton: _whidthButton,
-                      heightButton: _heightButton),
+                children:[
+                  ...vegetables.map((value)=>ButtonVegetable(
+                  marginBotom: _marginBotom, 
+                  whidthButton: _whidthButton, 
+                  heightButton: _heightButton, 
+                  icon: value.icon!=null?Image.network(value.icon!):Image.asset('assets/potato_icon.png'), 
+                  setVegetable: (){
+                    onChange!(value);
+                  })).toList(),
                   Container(
                     margin: EdgeInsets.only(left: 20),
                     child: Text(
@@ -215,16 +211,18 @@ class ButtonVegetable extends StatelessWidget {
       height: _heightButton,
     );
   }
-}*/
+}
 
 //Description
 class DescriptionCrop extends StatelessWidget {
 
   final Vegetable vegetable;
+  final VoidCallback? onBack;
 
   const DescriptionCrop({
     Key? key,
     required this.vegetable,
+    this.onBack
   }) : super(key: key);
 
   @override
@@ -275,11 +273,11 @@ class DescriptionCrop extends StatelessWidget {
                 top: 70,
               ),
               Positioned(
-                child: Icon(
+                child: IconButton(icon: Icon(
                   Icons.arrow_back_outlined,
                   color: Colors.blueGrey[800],
                   size: 32,
-                ),
+                ),onPressed: onBack,),
                 left: 20,
                 top: 15,
               ),

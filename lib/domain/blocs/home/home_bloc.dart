@@ -17,14 +17,17 @@ class HomeBloc extends Cubit<HomeState>{
 
   getVegetables(){
     interactor.getVegetables()
-    .then((value) => emit(HomeState.loaded(
-      vegetables: value, 
-      mapController: state.mapController)))
-    .catchError((error) => emit(HomeState.onError(error.message)));
+    .then((value){
+      emit(state.copyWith(isSubmiting: false, vegetables: value, selectedVegetable: value.first));
+    })
+    .catchError((error){
+      print(error);
+      emit(HomeState.onError(error.toString()));
+    });
   }
 
   changeVegetable(Vegetable vegetable){
-    emit(HomeState.loaded(
+    emit(state.copyWith(
       selectedLocation: state.selectedLocation,
       selectedVegetable: vegetable,
       vegetables: state.vegetables,
@@ -33,7 +36,7 @@ class HomeBloc extends Cubit<HomeState>{
   }
 
   changeLocation(Location location){
-    emit(HomeState.loaded(
+    emit(state.copyWith(
       vegetables: state.vegetables,
       selectedLocation: location,
       selectedVegetable: state.selectedVegetable,

@@ -9,7 +9,7 @@ class VegetableRepositoryImplementation implements VegetableRepository{
   
   @override
   Future<List<Vegetable>> getAll() async {
-    final response = await FirebaseFirestore.instance.collection('vegetables').get();
+    final response = await FirebaseFirestore.instance.collection('vegetable').get();
     return response.docs.map((e) => Vegetable.fromJson(e.data())).toList();
   }
 

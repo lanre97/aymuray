@@ -30,3 +30,10 @@ dev_dependencies:
 flutter:
 
   uses-material-design: true
+
+  assets:
+    - assets/
+    - assets/potato.png
+    - assets/onion.png
+    - assets/caracteristicas/
+    - assets/verduras/

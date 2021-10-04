@@ -15,7 +15,11 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<HomeBloc, HomeState>(builder: (context, state) {
+    return BlocConsumer<HomeBloc, HomeState>(listener: (context, state) {
+      if (state.vegetables == null) {
+        context.read<HomeBloc>().getVegetables();
+      }
+    }, builder: (context, state) {
       return Scaffold(
           floatingActionButton: MapTypeButtonWidget(
             mapType: state.mapType ?? MapType.normal,
@@ -63,28 +67,47 @@ class HomeScreen extends StatelessWidget {
                           Location(latLng.latitude, latLng.longitude));
                     },
                   ),
-                  Positioned(top: 150, right: 0, child: PlantPopUp()),
-                  if (state.selectedLocation != null)
-                    Positioned(
-                      bottom: 0,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          AtoqButtonProWidget(
-                              text: 'Information',
-                              color: Colors.black,
-                              borderColor: Colors.black,
-                              onPressed: () {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                  return VegetableScreen(
-                                      location: state.selectedLocation!,
-                                      vegetable: examplePotato);
-                                }));
-                              }),
-                        ],
-                      ),
-                    ),
+                  state.isSubmiting ?? false
+                      ? Container(
+                          alignment: Alignment.center,
+                          color: Colors.grey.withAlpha(200),
+                          child: CircularProgressIndicator(),
+                        )
+                      : Positioned(
+                          top: 150,
+                          right: 0,
+                          child: PlantPopUp(
+                            vegetables: state.vegetables!,
+                            selected: state.selectedVegetable!,
+                            onChange: (selected) {
+                              context
+                                  .read<HomeBloc>()
+                                  .changeVegetable(selected);
+                            },
+                          )),
+                  state.selectedLocation != null
+                      ? Positioned(
+                          bottom: 10,
+                          left: 20,
+                          child: FloatingActionButton.extended(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => VegetableScreen(
+                                          location: state.selectedLocation!,
+                                          vegetable:
+                                              state.selectedVegetable!)));
+                            },
+                            label: Text(
+                              "Evaluate",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            backgroundColor: Colors.black,
+                          ))
+                      : Container()
                 ],
               );
             },

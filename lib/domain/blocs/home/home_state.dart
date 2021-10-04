@@ -8,7 +8,7 @@ class HomeState{
   final List<Vegetable>? vegetables;
   final MapType? mapType;
 
-  final bool isSubmiting;
+  final bool? isSubmiting;
   final String? error;
   final GoogleMapController? mapController;
 
@@ -45,8 +45,8 @@ class HomeState{
     this.selectedLocation, 
     this.selectedVegetable, 
     this.mapType,
-    required this.vegetables,
-    required this.mapController}):
+    this.mapController,
+    this.vegetables}):
     error = null,
     isSubmiting = false;
 

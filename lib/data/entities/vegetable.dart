@@ -7,23 +7,34 @@ class Vegetable {
   final String? icon;
   final VegetableEnvironment environment;
 
-  const Vegetable(
-      {required this.name,
-      this.description,
-      this.vitamins,
-      this.minerals,
-      this.image,
-      this.icon,
-      required this.environment});
+  const Vegetable({
+    required this.name, 
+    this.description, 
+    this.vitamins, 
+    this.minerals, 
+    this.image, 
+    this.icon,
+    required this.environment
+  });
 
-  factory Vegetable.fromJson(Map<String, dynamic> json) => Vegetable(
+  factory Vegetable.fromJson(Map<String,dynamic> json)=>Vegetable(
+    name: json['name'], 
+    description: json['description'],
+    vitamins: json['vitamins'].cast<String>(),
+    minerals: json['minerals'].cast<String>(),
+    image: json['image'],
+    icon: json['icon'],
+    environment: VegetableEnvironment.fromJson(json['environment'])
+  );
+
+  /*factory Vegetable.fromJson(Map<String, dynamic> json) => Vegetable(
       name: json['name'],
       description: json['description'],
       vitamins: json['vitamins'],
       minerals: json['minerals'],
       image: json['image'],
       icon: json['icon'],
-      environment: json['environment']);
+      environment: json['environment']);*/
 }
 
 class VegetableEnvironment {
@@ -76,22 +87,23 @@ class VegetableEnvironment {
       this.optimalSoilWetness,
       this.harvestTime});
 
-  factory VegetableEnvironment.fromJson(Map<String, dynamic> json) =>
-      VegetableEnvironment(
-          maximumSnowDeep: json['maximumSnowDeep'],
-          optimalTopTemperature: json['optimalTopTemperature'],
-          optimalLowerTemperature: json['optimalLowerTemperature'],
-          topTemperatureLimit: json['topTemperatureLimit'],
-          lowerTemperatureLimit: json['lowerTemperatureLimit'],
-          temperatureVariation: json['temperatureVariation'],
-          maximumWindSpeed: json['maximumWindSpeed'],
-          optimalHeight: json['optimalHeight'],
-          maximumLuminosity: json['maximumLuminosity'],
-          minimumLuminosity: json['minimumLuminosity'],
-          maximumPrecipitation: json['maximumPrecipitation'],
-          minimumPrecipitation: json['minimumPrecipitation'],
-          optimalSoilWetness: json['optimalSoilWetness'],
-          harvestTime: json['harvestTime']);
+  factory VegetableEnvironment.fromJson(Map<String, dynamic> json)=>
+    VegetableEnvironment(
+      maximumSnowDeep:json['maximumSnowDeep']?.toDouble(),
+      optimalTopTemperature: json['optimalTopTemperature']?.toDouble(),
+      optimalLowerTemperature: json['optimalLowerTemperature']?.toDouble(),
+      topTemperatureLimit: json['topTemperatureLimit']?.toDouble(),
+      lowerTemperatureLimit: json['lowerTemperatureLimit']?.toDouble(),
+      temperatureVariation: json['temperatureVariation']?.toDouble(),
+      maximumWindSpeed: json['maximumWindSpeed']?.toDouble(),
+      optimalHeight: json['optimalHeight']?.toDouble(),
+      maximumLuminosity: json['maximumLuminosity']?.toDouble(),
+      minimumLuminosity: json['minimumLuminosity']?.toDouble(),
+      maximumPrecipitation: json['maximumPrecipitation']?.toDouble(),
+      minimumPrecipitation: json['minimumPrecipitation']?.toDouble(),
+      optimalSoilWetness: json['optimalSoilWetness']?.toDouble(),
+      harvestTime: json['harvestTime']?.toDouble()
+    );
 }
 
 Vegetable examplePotato = Vegetable(
